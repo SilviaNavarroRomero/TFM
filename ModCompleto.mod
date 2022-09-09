@@ -161,7 +161,7 @@ subject to
 	
 	forall (g in Grup, a in HorasAsignaturas: RestriccionesAsignaturas[a][g]==1)
 		sum(p in Docentes, d in Dias, h in Hor) x[p][a][g][d][h]==a.horas;
-	// 3. 7.04 Cada asignatura debe darse exactamente el número de horas que indica la ley.
+	// 2.3. (7.04) Cada asignatura debe darse exactamente el número de horas que indica la ley.
 	
 	forall(p in Docentes, a in HorasAsignaturas, d in Dias, h in Hor: p not in DocCurso1A || a.nombre not in Curso1 || Pref1ESOA[p][a.nombre]==0)
 		x[p][a]["1ESOA"][d][h]==0;
@@ -223,11 +223,11 @@ subject to
 		x[p][a]["Departamento"][d][h]==0;
 	forall(p in Docentes, a in HorasAsignaturas, d in Dias, h in Hor: p not in DocTutores || a.nombre not in CursoTut || PrefTut[p][a.nombre]==0)
 		x[p][a]["Tutores"][d][h]==0;
-	// 2. 7.07 Cada profesor sólo puede dar clases en aquellas asignaturas de las que tiene atribución docente.
+	// 2.2. (7.07) Cada profesor sólo puede dar clases en aquellas asignaturas de las que tiene atribución docente.
 	
 	forall(p in Docentes: p in DocTut)
  	  sum(d in Dias, h in Hor) x[p][<"ATUTP">]["Tutores"][d][h]==1;
- 	// 15. 7.12 Cada tutor debe tener una hora de atención a padres
+ 	// 3.3. (7.12) Cada tutor debe tener una hora de atención a padres
  	
 
 	forall(p in Docentes: p in Guardia2)
@@ -238,7 +238,7 @@ subject to
 		sum(d in Dias, h in Hor) x[p][<"AGUA">]["Guardias"][d][h]<=2;	
 	forall(d in Dias, h in Hor)
 	  	sum(p in Docentes) x[p][<"AGUA">]["Guardias"][d][h]==2;
-	// 16y17. 7.15 En cada momento debe haber dos profesores de guardia.
+	// 3.4.y3.5. (7.15) En cada momento debe haber dos profesores de guardia.
 	
 	forall (g in Grup, d in Dias, h in Hor: g in Grup1){
 	   	sum(p in Docentes) x[p][<"ASIG10">][g][d][h] == sum(p in Docentes) x[p][<"ASIG11">][g][d][h];
@@ -292,11 +292,11 @@ subject to
     	sum(p in Docentes) x[p][<"A114117CD">][g][d][h] == sum(p in Docentes) x[p][<"A115">][g][d][h];
     	sum(p in Docentes) x[p][<"A114117DC">][g][d][h] == sum(p in Docentes) x[p][<"A118">][g][d][h];
     }; 
-	// 5. 7.16 Se dan todas las asignaturas optativas a la vez para cada grupo.
+	// 2.5. (7.16) Se dan todas las asignaturas optativas a la vez para cada grupo.
 	
 	forall (g in Grup, a in HorasAsignaturas, d in Dias: g in GruposBase && a.nombre not in OptTriples && a.nombre not in CursoDep && a.nombre not in CursoTut) 
 		sum(p in Docentes, h in Hor) x[p][a][g][d][h]<=1;
-	// 10. 7.19 Cada asignatura sólo se da una vez al día.
+	// 2.9. (7.19) Cada asignatura sólo se da una vez al día.
 	
 	forall(d in Dias, h in Hor){
 	   sum(p in Docentes, a in HorasAsignaturas, g in Grup: a.nombre in ADeporte2) x[p][a][g][d][h]<=2;
@@ -310,7 +310,7 @@ subject to
   	   //sum(p in Docentes, a in HorasAsignaturas, g in Grup: a.nombre in ALab && a.nombre not in Optativas) x[p][a][g][d][h] + sum(p in Docentes, a in HorasAsignaturas, g in Grup: a.nombre in ALab && a.nombre in Optativas) x[p][a][g][d][h]/4 <=1;
   	   sum(p in Docentes, a in HorasAsignaturas, g in Grup: a.nombre in AOptativa2 && a.nombre not in Optativas) x[p][a][g][d][h] + sum(p in Docentes, a in HorasAsignaturas, g in Grup: a.nombre in AOptativa2 && a.nombre in Optativas) x[p][a][g][d][h]/4 <=2;
   	};	   
-    // 7.28 14. Las asignaturas no se pueden pisar en un mismo aula o lugar
+    //  3.2. (7.28) Las asignaturas no se pueden pisar en un mismo aula o lugar
     
     forall(d in Dias, h in Hor, a in HorasAsignaturas, g in Grup: a.nombre=="ADPAS" && g=="Departamento")
 		sum(p in Docentes: p in DepPastoral) x[p][a][g][d][h] == 6 || sum(p in Docentes: p in DepPastoral) x[p][a][g][d][h] == 0;
@@ -330,7 +330,7 @@ subject to
 		sum(p in Docentes: p in Tut1BTO) x[p][a][g][d][h] == 6 || sum(p in Docentes: p in Tut1BTO) x[p][a][g][d][h] == 0;
 	forall(d in Dias, h in Hor, a in HorasAsignaturas, g in Grup: a.nombre=="ATUT6" && g=="Tutores")
 		sum(p in Docentes: p in Tut2BTO) x[p][a][g][d][h] == 6 || sum(p in Docentes: p in Tut2BTO) x[p][a][g][d][h] == 0;
-	//7. 7.56 DepTut 
+	//2.7. (7.56) DepTut 
 	
 	forall(p in Docentes, d in Dias, h in Hor)
 	  	sum(a in HorasAsignaturas, g in Grup: a.nombre not in OPDobles && a.nombre not in OPCuadruples) x[p][a][g][d][h] <= 1;
@@ -338,7 +338,7 @@ subject to
 	  	sum(a in HorasAsignaturas, g in Grup: a.nombre not in OPCuadruples) x[p][a][g][d][h] <= 2;	
 	forall(p in Docentes, d in Dias, h in Hor)
 	  	sum(a in HorasAsignaturas, g in Grup) x[p][a][g][d][h] <= 4;
-	// 4. 8.06 Un profesor no puede estar en dos sitios a la vez
+	// 2.4. (8.06) Un profesor no puede estar en dos sitios a la vez
 	
 	forall(d in Dias, h in Hor){
 	  sum(p in Docentes, a in HorasAsignaturas: a.nombre in Desdoble) x[p][a]["1ESOA"][d][h] == sum(p in Docentes, a in HorasAsignaturas: a.nombre in Desdoble) x[p][a]["1ESOB"][d][h];
@@ -354,11 +354,11 @@ subject to
 	  sum(p in Docentes, a in HorasAsignaturas: a.nombre in Refuerzo) x[p][a]["4ESOA"][d][h] == sum(p in Docentes, a in HorasAsignaturas: a.nombre in Refuerzo) x[p][a]["4ESOD"][d][h];
 	  (sum(p in Docentes, a in HorasAsignaturas: a.nombre in Refuerzo) x[p][a]["4ESOA"][d][h])/4 == sum(p in Docentes, a in HorasAsignaturas: a.nombre in RefuerzoReal) x[p][a]["4REF"][d][h];
 	};	
-	// 11y12.8.09  Las asignaturas de Desdoble deben darse a la misma hora en todos los grupos para que puedan salir los alumnos.
+	// 2.10.y2.11. (8.09)  Las asignaturas de Desdoble deben darse a la misma hora en todos los grupos para que puedan salir los alumnos.
 	
 	forall(p in Docentes)
 	  sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][1]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][4]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][1]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][4]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][1]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][4]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][1]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][4]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][1]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][4]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Lunes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Martes"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Miercoles"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][0]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][0]==0||sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Jueves"][5]+ sum(a in HorasAsignaturas, g in Grup) x[p][a][g]["Viernes"][5]==0;
-	 // 13. 9.40 Horas puntas contrato
+	 // 3.1. (9.40) Horas puntas contrato
 
 	forall(d in Dias, h in Hor, a in HorasAsignaturas: a.nombre in Optativas1 && a.nombre!="ASIG15")
 		sum(p in Docentes, g in Grup: g in Grup1) x[p][a][g][d][h] == 4 || sum(p in Docentes, g in Grup: g in Grup1) x[p][a][g][d][h] == 0;
@@ -386,13 +386,11 @@ subject to
 		sum(p in Docentes, g in Grup: g in Grup6CT) x[p][a][g][d][h] == 2 || sum(p in Docentes, g in Grup: g in Grup6CT) x[p][a][g][d][h] == 0;
 	forall(d in Dias, h in Hor, a in HorasAsignaturas: a.nombre=="A125")
 		sum(p in Docentes, g in Grup: g in Grup6CT || g in Grup6HS) x[p][a][g][d][h] == 4 || sum(p in Docentes, g in Grup: g in Grup6CT || g in Grup6HS) x[p][a][g][d][h] == 0;
-	// 6. 10.08 Las optativas deben darse a la vez en todos los grupos.
+	// 2.6. (10.08) Las optativas deben darse a la vez en todos los grupos.
 	
 	forall(g in Grup, d in Dias, h in Hor: g in GruposBase)
-	  	sum(p in Docentes, a in HorasAsignaturas) x[p][a][g][d][h] ==1 || sum(p in Docentes, a in HorasAsignaturas: a.nombre not in Optativas) x[p][a][g][d][h] == 0;
-  	forall(g in Grup, d in Dias, h in Hor: g in GruposBase)
-	  	sum(p in Docentes, a in HorasAsignaturas: a.nombre in OMarcas) x[p][a][g][d][h] <= 1;
-	// 8y9. 11.49 Sólo puede haber una asignatura (no optativa) por momento y varias dependiendo la optativa.
+	  	sum(p in Docentes, a in HorasAsignaturas: a.nombre in OMarcas) x[p][a][g][d][h] + sum(p in Docentes, a in HorasAsignaturas: a.nombre not in Optativas) x[p][a][g][d][h] == 1;
+	// 2.8. (11.49) En cada grupo y momento solo puede haber una asignatura no optativa o las optativas.
   	
 }
 
